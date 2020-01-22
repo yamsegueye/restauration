@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>DakarFood</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel='stylesheet'
+        href='https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.css' />
+    <link rel='stylesheet'
+        href='https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/black/pace-theme-minimal.css' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css'/>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #fd8700;">
+        <a class="navbar-brand" href="#"><b>Dakar</b>Food</a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
+            aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation"></button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Accueil <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="link-fast-food">Fast Food</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" id="link-locale">Specialités Locales</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" id="link-exotique">Specialités Exotiques</a>
+                </li>
+                
+            </ul>
+     
+        </div>
+    </nav>
+    <div style="height: 20px;">
+
+    </div>
+ 
+        <div class="container card-columns" id="container-fast-food">
+        </div>
+ 
+    <div class="container card-columns" id="container-locale" style="display: none;">
+
+
+    </div>
+    <div class="container card-columns" id="container-exotique" style="display: none;">
+
+
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.0/handlebars.min.js'></script>
+    <script>
+        var foodStock = ["brownie-dessert-cake-sweet-45202.jpeg",
+            "food-salad-dinner-eating.jpg",
+            "food-salad-healthy-lunch.jpg",
+            "pexels-photo-1095550.jpeg",
+            "pexels-photo-1099680.jpeg",
+            "pexels-photo-1128678.jpeg",
+            "pexels-photo-1279330.jpeg",
+            "pexels-photo-1565982.jpeg",
+            "pexels-photo-1624487.jpeg",
+            "pexels-photo-1633525.jpeg",
+            "pexels-photo-1633578.jpeg",
+            "pexels-photo-1640772.jpeg",
+            "pexels-photo-1640773.jpeg",
+            "pexels-photo-1640774.jpeg",
+            "pexels-photo-1640777.jpeg",
+            "pexels-photo-1660030.jpeg",
+            "pexels-photo-255501.jpeg",
+            "pexels-photo-256318.jpeg",
+            "pexels-photo-262959.jpeg",
+            "pexels-photo-264537.jpeg",
+            "pexels-photo-326268.jpeg",
+            "pexels-photo-357573.jpeg",
+            "pexels-photo-372882.jpeg",
+            "pexels-photo-376464.jpeg",
+            "pexels-photo-461198.jpeg",
+            "pexels-photo-616404.jpeg",
+            "pexels-photo-675951.jpeg",
+            "pexels-photo-699953.jpeg",
+            "pexels-photo-704569.jpeg",
+            "pexels-photo-70497.jpeg",
+            "pexels-photo-958545.jpeg"];
+            function getRandomImage(){
+                max= foodStock.length;
+                min=0;
+                rand= Math.floor( Math.random()*(max-min)+min);
+                return "./food_stock/"+foodStock[rand];
+            }
+
+        $(document).ready(function () {
+
+            //initialisation ds div avec les elements dynamiques
+            for (let index = 0; index < 10; index++) {
+                var source = $("#commande-template").html();
+                var template = Handlebars.compile(source);
+                var context = { "id":faker.random.uuid(),"titre": faker.lorem.word(), "description": faker.lorem.sentence(), "source": getRandomImage() ,"specialite":"fast-food"};
+                var html = template(context);
+                $("#container-fast-food").append(html);
+                
+            }
+     
+
+
+$("#link-fast-food").click(function(){
+          $("#container-fast-food").fadeIn(function(){
+           $("#container-exotique").fadeOut(500);
+          $("#container-locale").fadeOut(500);
+         
+      });
+});
+
+
+
+});
+
+
+
+    </script>
+
+<script>
+    var foodStock = ["brownie-dessert-cake-sweet-45202.jpeg",
+        "food-salad-dinner-eating.jpg",
+        "food-salad-healthy-lunch.jpg",
+        "pexels-photo-1095550.jpeg",
+        "pexels-photo-1099680.jpeg",
+        "pexels-photo-1128678.jpeg",
+        "pexels-photo-1279330.jpeg",
+        "pexels-photo-1565982.jpeg",
+        "pexels-photo-1624487.jpeg",
+        "pexels-photo-1633525.jpeg",
+        "pexels-photo-1633578.jpeg",
+        "pexels-photo-1640772.jpeg",
+        "pexels-photo-1640773.jpeg",
+        "pexels-photo-1640774.jpeg",
+        "pexels-photo-1640777.jpeg",
+        "pexels-photo-1660030.jpeg",
+        "pexels-photo-255501.jpeg",
+        "pexels-photo-256318.jpeg",
+        "pexels-photo-262959.jpeg",
+        "pexels-photo-264537.jpeg",
+        "pexels-photo-326268.jpeg",
+        "pexels-photo-357573.jpeg",
+        "pexels-photo-372882.jpeg",
+        "pexels-photo-376464.jpeg",
+        "pexels-photo-461198.jpeg",
+        "pexels-photo-616404.jpeg",
+        "pexels-photo-675951.jpeg",
+        "pexels-photo-699953.jpeg",
+        "pexels-photo-704569.jpeg",
+        "pexels-photo-70497.jpeg",
+        "pexels-photo-958545.jpeg"];
+        function getRandomImage(){
+            max= foodStock.length;
+            min=0;
+            rand= Math.floor( Math.random()*(max-min)+min);
+            return "./food_stock/"+foodStock[rand];
+        }
+
+    $(document).ready(function () {
+
+        //initialisation ds div avec les elements dynamiques
+        for (let index = 0; index < 10; index++) {
+            var source = $("#commande-template").html();
+            var template = Handlebars.compile(source);
+            var context = { "id":faker.random.uuid(),"titre": faker.lorem.word(), "description": faker.lorem.sentence(), "source": getRandomImage() ,"specialite":"locale"};
+            var html = template(context);
+            $("#container-locale").append(html);
+            
+        }
+ 
+
+
+$("#link-locale").click(function(){
+      $("#container-locale").fadeIn(function(){
+       $("#container-exotique").fadeOut(500);
+      $("#container-fast-food").fadeOut(500);
+     
+  });
+});
+
+
+
+});
+
+
+
+</script>
+<script>
+    var foodStock = ["brownie-dessert-cake-sweet-45202.jpeg",
+        "food-salad-dinner-eating.jpg",
+        "food-salad-healthy-lunch.jpg",
+        "pexels-photo-1095550.jpeg",
+        "pexels-photo-1099680.jpeg",
+        "pexels-photo-1128678.jpeg",
+        "pexels-photo-1279330.jpeg",
+        "pexels-photo-1565982.jpeg",
+        "pexels-photo-1624487.jpeg",
+        "pexels-photo-1633525.jpeg",
+        "pexels-photo-1633578.jpeg",
+        "pexels-photo-1640772.jpeg",
+        "pexels-photo-1640773.jpeg",
+        "pexels-photo-1640774.jpeg",
+        "pexels-photo-1640777.jpeg",
+        "pexels-photo-1660030.jpeg",
+        "pexels-photo-255501.jpeg",
+        "pexels-photo-256318.jpeg",
+        "pexels-photo-262959.jpeg",
+        "pexels-photo-264537.jpeg",
+        "pexels-photo-326268.jpeg",
+        "pexels-photo-357573.jpeg",
+        "pexels-photo-372882.jpeg",
+        "pexels-photo-376464.jpeg",
+        "pexels-photo-461198.jpeg",
+        "pexels-photo-616404.jpeg",
+        "pexels-photo-675951.jpeg",
+        "pexels-photo-699953.jpeg",
+        "pexels-photo-704569.jpeg",
+        "pexels-photo-70497.jpeg",
+        "pexels-photo-958545.jpeg"];
+        function getRandomImage(){
+            max= foodStock.length;
+            min=0;
+            rand= Math.floor( Math.random()*(max-min)+min);
+            return "./food_stock/"+foodStock[rand];
+        }
+
+    $(document).ready(function () {
+
+        //initialisation ds div avec les elements dynamiques
+        for (let index = 0; index < 10; index++) {
+            var source = $("#commande-template").html();
+            var template = Handlebars.compile(source);
+            var context = { "id":faker.random.uuid(),"titre": faker.lorem.word(), "description": faker.lorem.sentence(), "source": getRandomImage() ,"specialite":"exotique"};
+            var html = template(context);
+            $("#container-exotique").append(html);
+            
+        }
+ 
+
+
+$("#link-exotique").click(function(){
+      $("#container-exotique").fadeIn(function(){
+       $("#container-fast-food").fadeOut(500);
+      $("#container-locale").fadeOut(500);
+     
+  });
+});
+
+
+
+});
+
+
+$("body").off("click", "btn-commander").on("click", ".btn-commander", function () {
+                console.log($(this).text());
+                
+                //recuperation données
+                selected_commande =  $(this).data("titre") + $(this).data("description");
+                sessionStorage.setItem('commande', selected_commande);
+                
+
+                //alerte 
+                Swal.fire({
+                    title: 'voulez vous commandez?',
+                    text: $(this).data("titre")+$(this).data("description"),
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'oui, commander!'
+                }).then((result) => {
+                    if (result.value) {
+                        Swal.fire(
+                            'réussie'
+                        )
+                        window.location.href = "formulaire-resto.html";
+                    }
+                })
+            });
+
+</script>
+
+
+    <script type="text/x-handlebars-template" id="commande-template">
+        <div class="card animated bounceIn" style="background-color:rgb(246, 246, 246); border-color:rgb(255, 255, 255);">
+            <img class="card-img-top" width="280px" src="{{source}}" alt="">
+            <div class="card-body">
+                <h4 class="card-title">{{titre}}</h4>
+                <span class="badge badge-pill badge-info">{{specialite}}</span>
+                <!-- <p class="card-text">{{specialite}}</p> -->
+                <p class="card-text">{{description}}</p>
+                <div style="width:100%;display: flex;justify-content: center;">
+                    <div class="btn btn-primary btn-commander" data-id="{{id}}" data-titre="{{titre}}" data-description="{{description}}">commander</div>
+                </div>
+            </div>
+        </div>
+</script>
+
+</body>
+
+</html>
